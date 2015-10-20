@@ -218,7 +218,7 @@ public class Game {
 			while(cont) {
 				System.out.println();
 				System.out.println("      2048");
-				display();	
+				display();
 				System.out.println("(2) Down");
 				System.out.println("(4) Left");
 				System.out.println("(6) Right");
@@ -240,7 +240,7 @@ public class Game {
 					System.out.println();
 					System.out.println("Leave Game. Good Bye!!!");
 					System.out.println();
-					
+
 					//end the user"s input life cycle
 					cont = false;
 				} else if (cmd.equals("0")) {
