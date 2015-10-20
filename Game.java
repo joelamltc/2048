@@ -1,6 +1,6 @@
 /*
  * Student name: Lin Ziqiao 
- * Student ID: 157100203
+ * Student ID: 6826257
  * Assignment 15-16 2048 game
  * Date: 27 Nov 2015 
  */
@@ -29,7 +29,10 @@ public class Game {
 				if (moveValidate()) {
 					score += convertLetter(grid[i][j]) * convertLetter(grid[i][j]);
 				}
-				System.out.print(grid[i][j] + " | ");
+				if (grid[i][j] == null_char)
+					System.out.print(grid[i][j] + "  | ");
+				else
+					System.out.print(grid[i][j] + " | ");
 			}
 			System.out.println();
 			System.out.println("-----------------");
@@ -201,10 +204,8 @@ public class Game {
 	public boolean moveValidate() {
 		return !(Arrays.deepEquals(grid, clone));
 	}
-	
-	public static void main(String[] args) {
-		Game game = new Game();
 
+	public void start() {
 		// read user"s input
 		InputStreamReader isr = new InputStreamReader(System.in);
 		BufferedReader br = new BufferedReader(isr);
@@ -217,7 +218,7 @@ public class Game {
 			while(cont) {
 				System.out.println();
 				System.out.println("      2048");
-				game.display();	
+				display();	
 				System.out.println("(2) Down");
 				System.out.println("(4) Left");
 				System.out.println("(6) Right");
@@ -228,23 +229,24 @@ public class Game {
 				System.out.print("Which Move: ");
 				String cmd = br.readLine();
 				if (cmd.equals("2")) {
-					game.slideDown();
+					slideDown();
 				} else if (cmd.equals("4")) {
-					game.slideLeft();
+					slideLeft();
 				} else if (cmd.equals("6")) {
-					game.slideRight();
+					slideRight();
 				} else if (cmd.equals("8")) {
-					game.slideUp();
+					slideUp();
 				} else if (cmd.equalsIgnoreCase("q")) {
 					System.out.println();
 					System.out.println("Leave Game. Good Bye!!!");
-
+					System.out.println();
+					
 					//end the user"s input life cycle
 					cont = false;
 				} else if (cmd.equals("0")) {
-					game.undo();
+					undo();
 				} else if (cmd.equalsIgnoreCase("r")) {
-					game.reset();
+					reset();
 				} else {
 					System.out.println("Invalid Input! Please try again.");
 				}
