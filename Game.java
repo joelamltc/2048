@@ -1,7 +1,8 @@
 /*
+ * Title: DSA Assignment 15-16
+ * Description: 2048 game
  * Student name: Lin Ziqiao 
  * Student ID: 6826257
- * Assignment 15-16 2048 game
  * Date: 27 Nov 2015 
  */
 
@@ -11,33 +12,32 @@ import java.io.*;
 public class Game {
 	private static final char null_char = '\u0000';
 	private static final int grid_width = 4;
-	private static char[][] grid = new char[grid_width][grid_width];
+	private static char[][] grid;
 	private static final char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-	private int score = 0;
+	private int score;
 	private static char[][] clone = new char[grid_width][grid_width];
+
+	// constructor for the Game class
+	public Game() {
+		grid = new char[grid_width][grid_width];
+		score = 0;
+	}
 
 	// display the grid and player"s score
 	public void display() {
 		if (gridIsEmpty()) {
-			initGrid();
+			init();
 		}
 
 		System.out.println("-----------------");
 		for (int i = 0; i < grid.length; i++) {
 			System.out.print("| ");
 			for (int j = 0; j < grid[i].length; j++) {
-				if (moveValidate()) {
-					score += convertLetter(grid[i][j]) * convertLetter(grid[i][j]);
-				}
-				if (grid[i][j] == null_char)
-					System.out.print(grid[i][j] + "  | ");
-				else
-					System.out.print(grid[i][j] + " | ");
+				System.out.print(grid[i][j] + " | ");
 			}
 			System.out.println();
 			System.out.println("-----------------");
 		}
-
 		System.out.println("Score: " + score);
 	}
 
@@ -75,7 +75,6 @@ public class Game {
 		if (moveValidate()) {
 			randomFill();
 		}
-		System.out.println("up");
 	}
 
 	// slide down function for the grid
@@ -157,20 +156,9 @@ public class Game {
 	}
 
 	// initial the grid with random tile
-	public void initGrid() {
-		Random rd1 = new Random();
-		Random rd2 = new Random();
-		int x, y, x1, y1;
-
-		x = rd1.nextInt(4);
-		y = rd2.nextInt(4);
-		grid[x][y] = '0';
-
-		do {
-			x1 = rd1.nextInt(4);
-			y1 = rd2.nextInt(4);
-		} while (!(x != x1 || y != y1));
-		grid[x1][y1] = '0';
+	public void init() {
+		randomFill();
+		randomFill();
 	}
 
 	// using number to represent the letters,
@@ -188,6 +176,7 @@ public class Game {
 
 	// return next letter of current one for merging tile
 	public char mergeTile(char c) {
+		score += Math.pow(2, convertLetter(c)); // calculate score
 		return alphabet[convertLetter(c)];
 	}
 
