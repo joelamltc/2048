@@ -8,6 +8,7 @@
 
 public class Start {
 	public static void main(String[] args) {
+		
 		// initial the undo list(ArrayQueue)
 		ArrayQueue undo_grid = new ArrayQueue();
 		ArrayQueue undo_score = new ArrayQueue();

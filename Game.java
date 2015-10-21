@@ -243,7 +243,6 @@ public class Game {
 				undo_grid.enqueue(clone_grid);
 				undo_score.enqueue(clone_score);
 			}
-
 		}
 	}
 
