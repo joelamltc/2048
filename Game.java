@@ -10,6 +10,7 @@ import java.util.*;
 import java.io.*;
 
 public class Game {
+
 	private static final char null_char = '\u0000';
 	private static final int grid_width = 4;
 	private static char[][] grid;
@@ -20,6 +21,7 @@ public class Game {
 	private static final int undo_list_size = 20;
 	private ArrayQueue undo_grid;
 	private ArrayQueue undo_score;
+	private boolean emptyUndoList = true;
 
 	// constructor for the Game class
 	public Game(ArrayQueue undo_grid, ArrayQueue undo_score) {
@@ -145,8 +147,7 @@ public class Game {
 			  	}
 			}
 			score = (int)undo_score.pop();
-			System.out.println(undo_grid);
-			System.out.println(undo_score);
+			emptyUndoList = false;
 		} else {
 			System.out.println("No moves can undo!");
 		}
@@ -158,6 +159,7 @@ public class Game {
 		clone_grid = new char[grid_width][grid_width];
 		score = 0;
 		clone_score = 0;
+		emptyUndoLists();
 	}
 
 	// check the grid is empty or not
@@ -219,21 +221,37 @@ public class Game {
 		return !(Arrays.deepEquals(grid, clone_grid));
 	}
 
-
 	// add the grid and score to the undo list
 	public void addToUndoList() {
-		if (undo_grid.length() >= undo_list_size && undo_score.length() >= undo_list_size) {
-			undo_grid.dequeue(); // remove the last grid and add the new grid
-			undo_grid.enqueue(clone_grid); // add grid in to undo list
+		if (emptyUndoList) {
+			if (undo_grid.length() >= undo_list_size && undo_score.length() >= undo_list_size) {
+				undo_grid.dequeue(); // remove the last grid and add the new grid
+				undo_grid.enqueue(clone_grid); // add grid in to undo list
 
-			undo_score.dequeue(); // remove the last score and add the new score
-			undo_score.enqueue(clone_score); // add score in to undo list
+				undo_score.dequeue(); // remove the last score and add the new score
+				undo_score.enqueue(clone_score); // add score in to undo list
+			} else {
+				undo_grid.enqueue(clone_grid);
+				undo_score.enqueue(clone_score);
+			}
 		} else {
-			undo_grid.enqueue(clone_grid); 
-			undo_score.enqueue(clone_score);
+			emptyUndoLists();
+
+			if (undo_grid.length() == 0 && undo_score.length() == 0) {
+				emptyUndoList = true;
+				undo_grid.enqueue(clone_grid);
+				undo_score.enqueue(clone_score);
+			}
+
 		}
-		System.out.println(undo_grid);
-		System.out.println(undo_score);
+	}
+
+	// empty the undo lists if user had did the undo before
+	public void emptyUndoLists() {
+		while (undo_grid.length() != 0 && undo_score.length() != 0) {
+			undo_grid.pop();
+			undo_score.pop();
+		}
 	}
 
 	public void start() {

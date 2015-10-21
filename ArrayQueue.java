@@ -63,16 +63,14 @@ public class ArrayQueue {
 	}
 
 	public Object pop() throws EmptyQueueException {
-		if (count <= 0) {
+		if (count <= 0)
 			throw new EmptyQueueException();
-		}
 		count--;
 		Object temp = undo_list[rear];
-		if (rear < maxSize - 1) {
+		if (rear < maxSize - 1) 
 			rear--;
-		} else {
+		else 
 			rear = 0;
-		}
 		return temp;
 	}
 
@@ -90,9 +88,7 @@ public class ArrayQueue {
 
 		s = s + "] rear";
 		return s;
-
 	}
-
 } // class ArrayQueue
 
 class EmptyQueueException extends RuntimeException {
