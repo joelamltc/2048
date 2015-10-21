@@ -8,7 +8,11 @@
 
 public class Start {
 	public static void main(String[] args) {
-		Game game = new Game();
+		// initial the undo list(ArrayQueue)
+		ArrayQueue undo_grid = new ArrayQueue();
+		ArrayQueue undo_score = new ArrayQueue();
+
+		Game game = new Game(undo_grid, undo_score);
 		game.start();
 	}
 }

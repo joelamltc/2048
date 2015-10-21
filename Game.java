@@ -15,15 +15,21 @@ public class Game {
 	private static char[][] grid;
 	private static final char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 	private int score;
-	private static char[][] clone = new char[grid_width][grid_width];
+	private static char[][] clone_grid;
+	private int clone_score;
+	private static final int undo_list_size = 20;
+	private ArrayQueue undo_grid;
+	private ArrayQueue undo_score;
 
 	// constructor for the Game class
-	public Game() {
+	public Game(ArrayQueue undo_grid, ArrayQueue undo_score) {
+		this.undo_grid = undo_grid;
+		this.undo_score = undo_score;
 		grid = new char[grid_width][grid_width];
 		score = 0;
 	}
 
-	// display the grid and player"s score
+	// display the grid and player's score
 	public void display() {
 		if (gridIsEmpty()) {
 			init();
@@ -44,6 +50,7 @@ public class Game {
 	// slide up function for the grid
 	public void slideUp() {
 		cloneArray();
+
 		for (int i = 1; i < grid.length; i++) {
 			for (int j = 0; j < grid.length; j++) {
 				if (grid[i][j] == grid[i - 1][j] && (grid[i][j] != null_char || grid[i - 1][j] != null_char)) {
@@ -74,6 +81,7 @@ public class Game {
 
 		if (moveValidate()) {
 			randomFill();
+			addToUndoList();
 		}
 	}
 
@@ -128,13 +136,28 @@ public class Game {
 
 	// undo function for grid
 	public void undo() {
-		System.out.println("undo");
+		if (undo_grid.length() > 0 && undo_score.length() > 0) {
+			char[][] undo = new char[grid_width][grid_width];
+			undo = (char[][])undo_grid.pop();
+			for (int i = 0; i < undo.length; i++) {
+			  	for (int j = 0; j < undo[i].length; j++) {
+			    	grid[i][j] = undo[i][j];
+			  	}
+			}
+			score = (int)undo_score.pop();
+			System.out.println(undo_grid);
+			System.out.println(undo_score);
+		} else {
+			System.out.println("No moves can undo!");
+		}
 	}
 
 	// reset the game
 	public void reset() {
 		grid = new char[grid_width][grid_width];
+		clone_grid = new char[grid_width][grid_width];
 		score = 0;
+		clone_score = 0;
 	}
 
 	// check the grid is empty or not
@@ -182,16 +205,35 @@ public class Game {
 
 	// clone grid array for validation
 	public void cloneArray() {
+		clone_grid = new char[grid_width][grid_width];
 		for (int i = 0; i < grid.length; i++) {
 		  	for (int j = 0; j < grid[i].length; j++) {
-		    	clone[i][j] = grid[i][j];
+		    	clone_grid[i][j] = grid[i][j];
 		  	}
 		}
+		clone_score = score;
 	}
 
 	// moves validation
 	public boolean moveValidate() {
-		return !(Arrays.deepEquals(grid, clone));
+		return !(Arrays.deepEquals(grid, clone_grid));
+	}
+
+
+	// add the grid and score to the undo list
+	public void addToUndoList() {
+		if (undo_grid.length() >= undo_list_size && undo_score.length() >= undo_list_size) {
+			undo_grid.dequeue(); // remove the last grid and add the new grid
+			undo_grid.enqueue(clone_grid); // add grid in to undo list
+
+			undo_score.dequeue(); // remove the last score and add the new score
+			undo_score.enqueue(clone_score); // add score in to undo list
+		} else {
+			undo_grid.enqueue(clone_grid); 
+			undo_score.enqueue(clone_score);
+		}
+		System.out.println(undo_grid);
+		System.out.println(undo_score);
 	}
 
 	public void start() {
