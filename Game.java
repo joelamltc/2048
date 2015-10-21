@@ -159,6 +159,7 @@ public class Game {
 		clone_grid = new char[grid_width][grid_width];
 		score = 0;
 		clone_score = 0;
+		emptyUndoList = true;
 		emptyUndoLists();
 	}
 
