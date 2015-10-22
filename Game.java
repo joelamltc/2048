@@ -22,7 +22,7 @@ public class Game {
 	private ArrayQueue undo_grid;
 	private ArrayQueue undo_score;
 	private boolean emptyUndoList;
-	private boolean merged;
+	int counter = 0;
 
 	// constructor for the Game class
 	public Game(ArrayQueue undo_grid, ArrayQueue undo_score) {
@@ -31,7 +31,6 @@ public class Game {
 		grid = new char[grid_width][grid_width];
 		score = 0;
 		emptyUndoList = true;
-		merged = true;
 	}
 
 	// display the grid and player's score
@@ -58,40 +57,42 @@ public class Game {
 			System.out.println("-----------------");
 		}
 		System.out.println("Score: " + score);
+		System.out.println("Count: " + counter++);
 	}
 
 	// slide up function for the grid
 	public void slideUp() {
 		cloneArray();
 
-		for (int i = 1; i < grid.length; i++) {
-			for (int j = 0; j < grid[i].length; j++) {
-				if (grid[i][j] == grid[i - 1][j] && (grid[i][j] != null_char || grid[i - 1][j] != null_char)) { // compare the same tile and ensure those cells is not null
-					grid[i - 1][j] = mergeTile(grid[i][j]);
-					grid[i][j] = null_char;
-					merged = false;
-				} else if (grid[i - 1][j] == null_char && grid[i][j] != null_char) { // bring all to the user's input direction
-					int k = i;
-					while (grid[k - 1][j] == null_char) {
-						grid[k - 1][j] = grid[k][j];
-						grid[k][j] = null_char;
-						k--;
-						if (k == 0) {
-							break;
+		for (int j = 0; j < grid.length; j++) {
+			for (int i = 0; i < grid.length; i++) {
+				if (grid[i][j] != null_char) { // check if cell will empty
+					if ((i + 1) < grid.length) { // check if array will outbound
+						for (int k = i + 1; k < grid.length; k++) {
+							if (grid[k][j] != null_char) { // check if cell will empty
+								if (grid[i][j] == grid[k][j]) { // merge if two tiles are the same 
+									grid[i][j] = mergeTile(grid[k][j]);
+									grid[k][j] = null_char;
+									break; // break for finished one mapping
+								} else {
+									break; //break for jump to next cell
+								}
+							}
 						}
 					}
-					merged = true;
 				}
 			}
 		}
 
-		// merge again after bring all to the users' input direction
-		if (merged) {
-			for (int i = 1; i < grid.length; i++) {
-				for (int j = 0; j < grid[i].length; j++) {
-					if (grid[i][j] == grid[i - 1][j] && (grid[i][j] != null_char || grid[i - 1][j] != null_char)) {
-						grid[i - 1][j] = mergeTile(grid[i][j]);
-						grid[i][j] = null_char;
+		for (int i = 1; i < grid.length; i++) {
+			for (int j = 0; j < grid.length; j++) {
+				int k = i;
+				while (grid[k - 1][j] == null_char) {
+					grid[k - 1][j] = grid[k][j];
+					grid[k][j] = null_char;
+					k--;
+					if (k == 0) {
+						break;
 					}
 				}
 			}
@@ -107,33 +108,35 @@ public class Game {
 	public void slideDown() {
 		cloneArray();
 
-		for (int i = grid.length - 2; i >= 0; i--) {
-			for (int j = 0; j < grid[i].length; j++) {
-				if (grid[i][j] == grid[i + 1][j] && (grid[i][j] != null_char || grid[i + 1][j] != null_char)) {
-					grid[i + 1][j] = mergeTile(grid[i][j]);
-					grid[i][j] = null_char;
-					merged = false;
-				} else if (grid[i + 1][j] == null_char && grid[i][j] != null_char) {
-					int k = i;
-					while (grid[k + 1][j] == null_char) {
-						grid[k + 1][j] = grid[k][j];
-						grid[k][j] = null_char;
-						k++;
-						if (k == 3) {
-							break;
+		for (int j = 0; j < grid.length; j++) {
+			for (int i = grid.length - 1; i >= 0; i--) {
+				if (grid[i][j] != null_char) {
+					if ((i - 1) >= 0) {
+						for (int k = i - 1; k >= 0; k--) {
+							if (grid[k][j] != null_char) {
+								if (grid[i][j] == grid[k][j]) {
+									grid[i][j] = mergeTile(grid[k][j]);
+									grid[k][j] = null_char;
+									break;
+								} else {
+									break;
+								}
+							}
 						}
 					}
-					merged = true;
 				}
 			}
 		}
 
-		if (merged) {
-			for (int i = grid.length - 2; i >= 0; i--) {
-				for (int j = 0; j < grid[i].length; j++) {
-					if (grid[i][j] == grid[i + 1][j] && (grid[i][j] != null_char || grid[i + 1][j] != null_char)) {
-						grid[i + 1][j] = mergeTile(grid[i][j]);
-						grid[i][j] = null_char;
+		for (int i = grid.length - 2; i >= 0; i--) {
+			for (int j = 0; j < grid.length; j++) {
+				int k = i;
+				while (grid[k + 1][j] == null_char) {
+					grid[k + 1][j] = grid[k][j];
+					grid[k][j] = null_char;
+					k++;
+					if (k == 3) {
+						break;
 					}
 				}
 			}
@@ -149,15 +152,38 @@ public class Game {
 	public void slideLeft() {
 		cloneArray();
 
-		for (int i = 0; i < grid.length; i++) {
-			System.out.println(i);
-			for (int j = 1; j < grid[i].length; j++) {
-				// if (grid[i][j] == grid[i][j - 1] && ()) {
-
-				// }
-				System.out.print(j);
+		for (int i = 0; i < grid.length; i++) {		
+			for (int j = 0; j < grid.length; j++) {
+				if (grid[i][j] != null_char) {
+					if ((j + 1) < grid.length) {
+						for (int k = j + 1; k < grid.length; k++) {
+							if (grid[i][k] != null_char) {
+								if (grid[i][j] == grid[i][k]) {
+									grid[i][j] = mergeTile(grid[i][k]);
+									grid[i][k] = null_char;
+									break;
+								} else {
+									break;
+								}
+							}
+						}
+					}
+				}
 			}
-			System.out.println();
+		}
+
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 1; j < grid.length; j++) {
+				int k = j;
+				while (grid[i][k - 1] == null_char) {
+					grid[i][k - 1] = grid[i][k];
+					grid[i][k] = null_char;
+					k--;
+					if (k == 0) {
+						break;
+					}
+				}
+			}
 		}
 
 		if (moveValidate()) {
@@ -168,35 +194,75 @@ public class Game {
 
 	// slide right function for the grid
 	public void slideRight() {
-		System.out.println("right");
+		cloneArray();
+
+		for (int i = 0; i < grid.length; i++) {	
+			for (int j = grid.length - 1; j >= 0; j--) {
+				if (grid[i][j] != null_char) {
+					if ((j - 1) >= 0) {
+						for (int k = j - 1; k >= 0; k--) {
+							if (grid[i][k] != null_char) {
+								if (grid[i][j] == grid[i][k]) {
+									grid[i][j] = mergeTile(grid[i][k]);
+									grid[i][k] = null_char;
+									break;
+								} else {
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < grid.length; i++) {
+			System.out.print(i);
+			for (int j = grid.length - 2; j >= 0; j--) {
+				int k = j;
+				while (grid[i][k + 1] == null_char) {
+					grid[i][k + 1] = grid[i][k];
+					grid[i][k] = null_char;
+					k++;
+					if (k == 3) {
+						break;
+					}
+				}
+			}
+		}
+
+		if (moveValidate()) {
+			randomFill();
+			addToUndoList();
+		}
 	}
 
 	// random fill tile function for the grid
 	public void randomFill() {
-		boolean filled = true;
-		int x, y;
-		char tile;
-		Random rd1 = new Random();
-		Random rd2 = new Random();
-		Random rd3 = new Random();
+		// boolean filled = true;
+		// int x, y;
+		// char tile;
+		// Random rd1 = new Random();
+		// Random rd2 = new Random();
+		// Random rd3 = new Random();
 
-		int ratio = rd3.nextInt(50) + 1;
-		if (ratio <= 40) {
-			tile = '0';
-		} else if (ratio == 50) {
-			tile = 'B';
-		} else {
-			tile = 'A';
-		}
+		// int ratio = rd3.nextInt(50) + 1;
+		// if (ratio <= 40) {
+		// 	tile = '0';
+		// } else if (ratio == 50) {
+		// 	tile = 'B';
+		// } else {
+		// 	tile = 'A';
+		// }
 
-		while (filled) {
-			x = rd1.nextInt(4);
-			y = rd2.nextInt(4);
-			if (grid[x][y] == null_char) {
-				grid[x][y] = tile;
-				filled = false;
-			}
-		}
+		// while (filled) {
+		// 	x = rd1.nextInt(4);
+		// 	y = rd2.nextInt(4);
+		// 	if (grid[x][y] == null_char) {
+		// 		grid[x][y] = tile;
+		// 		filled = false;
+		// 	}
+		// }
 	}
 
 	// game over function for the grid
@@ -253,6 +319,10 @@ public class Game {
 	public void init() {
 		randomFill();
 		randomFill();
+		grid[0][0] = 'D'; grid[0][1] = 'A'; grid[0][2] = 'A'; grid[0][3] = 'A';
+		grid[1][0] = 'B'; grid[1][1] = '0'; grid[1][2] = null_char; grid[1][3] = null_char;
+		grid[2][0] = null_char; grid[2][1] = null_char; grid[2][2] = null_char; grid[2][3] = null_char;
+		grid[3][0] = null_char; grid[3][1] = null_char; grid[3][2] = null_char; grid[3][3] = null_char;
 	}
 
 	// using number to represent the letters,
@@ -293,7 +363,7 @@ public class Game {
 	// add the grid and score to the undo list
 	public void addToUndoList() {
 		if (emptyUndoList) {
-			if (undo_grid.length() >= undo_list_size && undo_score.length() >= undo_list_size) {
+			if (undo_grid.length() == undo_list_size && undo_score.length() == undo_list_size) {
 				undo_grid.dequeue(); // remove the last grid and add the new grid
 				undo_grid.enqueue(clone_grid); // add grid in to undo list
 
@@ -369,7 +439,7 @@ public class Game {
 					System.out.println("Invalid Input! Please try again.");
 				}
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
