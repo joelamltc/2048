@@ -44,10 +44,14 @@ public class Game {
 		for (int i = 0; i < grid.length; i++) {
 			System.out.print("| ");
 			for (int j = 0; j < grid[i].length; j++) {
-				if (grid[i][j] == null_char) {
-					System.out.printf(" %s | ", Character.toString(grid[i][j]));
-				} else {
+				if (System.getProperty("os.name").contains("Windows")) { //for display on Window's cmd
 					System.out.printf("%s | ", Character.toString(grid[i][j]));
+				} else if (System.getProperty("os.name").contains("Mac")) { // for display on Mac os's terminal
+					if (grid[i][j] == null_char) {
+						System.out.printf(" %s | ", Character.toString(grid[i][j]));
+					} else {
+						System.out.printf("%s | ", Character.toString(grid[i][j]));
+					}
 				}
 			}
 			System.out.println();
