@@ -21,7 +21,8 @@ public class Game {
 	private static final int undo_list_size = 20;
 	private ArrayQueue undo_grid;
 	private ArrayQueue undo_score;
-	private boolean emptyUndoList = true;
+	private boolean emptyUndoList;
+	private boolean merged;
 
 	// constructor for the Game class
 	public Game(ArrayQueue undo_grid, ArrayQueue undo_score) {
@@ -29,6 +30,8 @@ public class Game {
 		this.undo_score = undo_score;
 		grid = new char[grid_width][grid_width];
 		score = 0;
+		emptyUndoList = true;
+		merged = true;
 	}
 
 	// display the grid and player's score
@@ -41,7 +44,11 @@ public class Game {
 		for (int i = 0; i < grid.length; i++) {
 			System.out.print("| ");
 			for (int j = 0; j < grid[i].length; j++) {
-				System.out.print(grid[i][j] + " | ");
+				if (grid[i][j] == null_char) {
+					System.out.printf(" %s | ", Character.toString(grid[i][j]));
+				} else {
+					System.out.printf("%s | ", Character.toString(grid[i][j]));
+				}
 			}
 			System.out.println();
 			System.out.println("-----------------");
@@ -54,11 +61,12 @@ public class Game {
 		cloneArray();
 
 		for (int i = 1; i < grid.length; i++) {
-			for (int j = 0; j < grid.length; j++) {
-				if (grid[i][j] == grid[i - 1][j] && (grid[i][j] != null_char || grid[i - 1][j] != null_char)) {
+			for (int j = 0; j < grid[i].length; j++) {
+				if (grid[i][j] == grid[i - 1][j] && (grid[i][j] != null_char || grid[i - 1][j] != null_char)) { // compare the same tile and ensure those cells is not null
 					grid[i - 1][j] = mergeTile(grid[i][j]);
 					grid[i][j] = null_char;
-				} else if (grid[i - 1][j] == null_char && grid[i][j] != null_char) {
+					merged = false;
+				} else if (grid[i - 1][j] == null_char && grid[i][j] != null_char) { // bring all to the user's input direction
 					int k = i;
 					while (grid[k - 1][j] == null_char) {
 						grid[k - 1][j] = grid[k][j];
@@ -68,15 +76,19 @@ public class Game {
 							break;
 						}
 					}
+					merged = true;
 				}
 			}
 		}
 
-		for (int i = 1; i < grid.length; i++) {
-			for (int j = 0; j < grid.length; j++) {
-				if (grid[i][j] == grid[i - 1][j] && (grid[i][j] != null_char || grid[i - 1][j] != null_char)) {
-					grid[i - 1][j] = mergeTile(grid[i][j]);
-					grid[i][j] = null_char;
+		// merge again after bring all to the users' input direction
+		if (merged) {
+			for (int i = 1; i < grid.length; i++) {
+				for (int j = 0; j < grid[i].length; j++) {
+					if (grid[i][j] == grid[i - 1][j] && (grid[i][j] != null_char || grid[i - 1][j] != null_char)) {
+						grid[i - 1][j] = mergeTile(grid[i][j]);
+						grid[i][j] = null_char;
+					}
 				}
 			}
 		}
@@ -89,13 +101,65 @@ public class Game {
 
 	// slide down function for the grid
 	public void slideDown() {
-		
-		System.out.println("down");
+		cloneArray();
+
+		for (int i = grid.length - 2; i >= 0; i--) {
+			for (int j = 0; j < grid[i].length; j++) {
+				if (grid[i][j] == grid[i + 1][j] && (grid[i][j] != null_char || grid[i + 1][j] != null_char)) {
+					grid[i + 1][j] = mergeTile(grid[i][j]);
+					grid[i][j] = null_char;
+					merged = false;
+				} else if (grid[i + 1][j] == null_char && grid[i][j] != null_char) {
+					int k = i;
+					while (grid[k + 1][j] == null_char) {
+						grid[k + 1][j] = grid[k][j];
+						grid[k][j] = null_char;
+						k++;
+						if (k == 3) {
+							break;
+						}
+					}
+					merged = true;
+				}
+			}
+		}
+
+		if (merged) {
+			for (int i = grid.length - 2; i >= 0; i--) {
+				for (int j = 0; j < grid[i].length; j++) {
+					if (grid[i][j] == grid[i + 1][j] && (grid[i][j] != null_char || grid[i + 1][j] != null_char)) {
+						grid[i + 1][j] = mergeTile(grid[i][j]);
+						grid[i][j] = null_char;
+					}
+				}
+			}
+		}
+
+		if (moveValidate()) {
+			randomFill();
+			addToUndoList();
+		}
 	}
 
 	// slide left function for the grid
 	public void slideLeft() {
-		System.out.println("left");
+		cloneArray();
+
+		for (int i = 0; i < grid.length; i++) {
+			System.out.println(i);
+			for (int j = 1; j < grid[i].length; j++) {
+				// if (grid[i][j] == grid[i][j - 1] && ()) {
+
+				// }
+				System.out.print(j);
+			}
+			System.out.println();
+		}
+
+		if (moveValidate()) {
+			randomFill();
+			addToUndoList();
+		}
 	}
 
 	// slide right function for the grid
@@ -285,7 +349,7 @@ public class Game {
 					slideRight();
 				} else if (cmd.equals("8")) {
 					slideUp();
-				} else if (cmd.equalsIgnoreCase("q")) {
+				} else if (cmd.equalsIgnoreCase("q")) {	
 					System.out.println();
 					System.out.println("Leave Game. Good Bye!!!");
 					System.out.println();
@@ -297,6 +361,7 @@ public class Game {
 				} else if (cmd.equalsIgnoreCase("r")) {
 					reset();
 				} else {
+					System.out.println();
 					System.out.println("Invalid Input! Please try again.");
 				}
 			}
