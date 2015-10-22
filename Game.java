@@ -239,30 +239,30 @@ public class Game {
 
 	// random fill tile function for the grid
 	public void randomFill() {
-		// boolean filled = true;
-		// int x, y;
-		// char tile;
-		// Random rd1 = new Random();
-		// Random rd2 = new Random();
-		// Random rd3 = new Random();
+		boolean filled = true;
+		int x, y;
+		char tile;
+		Random rd1 = new Random();
+		Random rd2 = new Random();
+		Random rd3 = new Random();
 
-		// int ratio = rd3.nextInt(50) + 1;
-		// if (ratio <= 40) {
-		// 	tile = '0';
-		// } else if (ratio == 50) {
-		// 	tile = 'B';
-		// } else {
-		// 	tile = 'A';
-		// }
+		int ratio = rd3.nextInt(50) + 1;
+		if (ratio <= 40) {
+			tile = '0';
+		} else if (ratio == 50) {
+			tile = 'B';
+		} else {
+			tile = 'A';
+		}
 
-		// while (filled) {
-		// 	x = rd1.nextInt(4);
-		// 	y = rd2.nextInt(4);
-		// 	if (grid[x][y] == null_char) {
-		// 		grid[x][y] = tile;
-		// 		filled = false;
-		// 	}
-		// }
+		while (filled) {
+			x = rd1.nextInt(4);
+			y = rd2.nextInt(4);
+			if (grid[x][y] == null_char) {
+				grid[x][y] = tile;
+				filled = false;
+			}
+		}
 	}
 
 	// game over function for the grid
@@ -319,10 +319,10 @@ public class Game {
 	public void init() {
 		randomFill();
 		randomFill();
-		grid[0][0] = 'D'; grid[0][1] = 'A'; grid[0][2] = 'A'; grid[0][3] = 'A';
-		grid[1][0] = 'B'; grid[1][1] = '0'; grid[1][2] = null_char; grid[1][3] = null_char;
-		grid[2][0] = null_char; grid[2][1] = null_char; grid[2][2] = null_char; grid[2][3] = null_char;
-		grid[3][0] = null_char; grid[3][1] = null_char; grid[3][2] = null_char; grid[3][3] = null_char;
+		// grid[0][0] = 'D'; grid[0][1] = 'A'; grid[0][2] = 'A'; grid[0][3] = 'A';
+		// grid[1][0] = 'B'; grid[1][1] = '0'; grid[1][2] = null_char; grid[1][3] = null_char;
+		// grid[2][0] = null_char; grid[2][1] = null_char; grid[2][2] = null_char; grid[2][3] = null_char;
+		// grid[3][0] = null_char; grid[3][1] = null_char; grid[3][2] = null_char; grid[3][3] = null_char;
 	}
 
 	// using number to represent the letters,
