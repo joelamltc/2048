@@ -21,7 +21,6 @@ public class Game {
 	private static final int undo_list_size = 20;
 	private ArrayQueue undo_grid;
 	private ArrayQueue undo_score;
-	private boolean emptyUndoList;
 	int counter = 0;
 
 	// constructor for the Game class
@@ -30,7 +29,6 @@ public class Game {
 		this.undo_score = undo_score;
 		grid = new char[grid_width][grid_width];
 		score = 0;
-		emptyUndoList = true;
 	}
 
 	// display the grid and player's score
@@ -281,7 +279,6 @@ public class Game {
 			  	}
 			}
 			score = (int)undo_score.pop();
-			emptyUndoList = false;
 		} else {
 			System.out.println("No moves can undo!");
 		}
@@ -293,7 +290,6 @@ public class Game {
 		clone_grid = new char[grid_width][grid_width];
 		score = 0;
 		clone_score = 0;
-		emptyUndoList = true;
 		emptyUndoLists();
 	}
 
@@ -319,10 +315,6 @@ public class Game {
 	public void init() {
 		randomFill();
 		randomFill();
-		// grid[0][0] = 'D'; grid[0][1] = 'A'; grid[0][2] = 'A'; grid[0][3] = 'A';
-		// grid[1][0] = 'B'; grid[1][1] = '0'; grid[1][2] = null_char; grid[1][3] = null_char;
-		// grid[2][0] = null_char; grid[2][1] = null_char; grid[2][2] = null_char; grid[2][3] = null_char;
-		// grid[3][0] = null_char; grid[3][1] = null_char; grid[3][2] = null_char; grid[3][3] = null_char;
 	}
 
 	// using number to represent the letters,
@@ -362,31 +354,21 @@ public class Game {
 
 	// add the grid and score to the undo list
 	public void addToUndoList() {
-		if (emptyUndoList) {
-			if (undo_grid.length() == undo_list_size && undo_score.length() == undo_list_size) {
-				undo_grid.dequeue(); // remove the last grid and add the new grid
-				undo_grid.enqueue(clone_grid); // add grid in to undo list
+		if (undo_grid.length() == undo_list_size && undo_score.length() == undo_list_size) {
+			undo_grid.dequeue(); // remove the last grid and add the new grid
+			undo_grid.enqueue(clone_grid); // add grid in to undo list
 
-				undo_score.dequeue(); // remove the last score and add the new score
-				undo_score.enqueue(clone_score); // add score in to undo list
-			} else {
-				undo_grid.enqueue(clone_grid);
-				undo_score.enqueue(clone_score);
-			}
+			undo_score.dequeue(); // remove the last score and add the new score
+			undo_score.enqueue(clone_score); // add score in to undo list
 		} else {
-			emptyUndoLists();
-
-			if (undo_grid.length() == 0 && undo_score.length() == 0) {
-				emptyUndoList = true;
-				undo_grid.enqueue(clone_grid);
-				undo_score.enqueue(clone_score);
-			}
+			undo_grid.enqueue(clone_grid);
+			undo_score.enqueue(clone_score);
 		}
 	}
 
 	// empty the undo lists if user had did the undo before
 	public void emptyUndoLists() {
-		while (undo_grid.length() != 0 && undo_score.length() != 0) {
+		while (undo_grid.length() > 0 && undo_score.length() > 0) {
 			undo_grid.pop();
 			undo_score.pop();
 		}

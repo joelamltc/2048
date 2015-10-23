@@ -9,7 +9,7 @@
 public class ArrayQueue {
 
 	private int maxSize;
-	private Object [] undo_list;
+	private Object[] undo_list;
 	private int front;
 	private int rear;
 	private int count;
@@ -41,7 +41,7 @@ public class ArrayQueue {
 	public void enqueue(Object item) throws QueueFullException {
 		if (count < maxSize) {
 			count++;
-			if (rear < maxSize-1)
+			if (rear < maxSize - 1)
 				rear++;
 			else
 				rear = 0;
@@ -55,7 +55,7 @@ public class ArrayQueue {
 			throw new EmptyQueueException();
 		count--;
 		Object temp = undo_list[front];
-		if (front < maxSize-1)
+		if (front < maxSize - 1)
 			front++;
 		else
 			front = 0;
@@ -67,10 +67,13 @@ public class ArrayQueue {
 			throw new EmptyQueueException();
 		count--;
 		Object temp = undo_list[rear];
-		if (rear < maxSize - 1) 
-			rear--;
+		if (rear < front)
+			if (rear != 0)
+				rear--;
+			else 
+				rear = maxSize - 1;
 		else 
-			rear = 0;
+			rear--;
 		return temp;
 	}
 
@@ -80,7 +83,7 @@ public class ArrayQueue {
 		int index = front;
 		for (int i = 0; i < count; i++) {
 			s = s + undo_list[index] + " ";
-			if (index < maxSize-1)
+			if (index < maxSize - 1)
 				index++;
 			else
 				index = 0;
