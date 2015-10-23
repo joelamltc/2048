@@ -13,12 +13,12 @@ public class Game {
 
 	private static final char null_char = '\u0000';
 	private static final int grid_width = 4;
-	private static char[][] grid;
-	private static final char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-	private int score;
-	private static char[][] clone_grid;
-	private int clone_score;
 	private static final int undo_list_size = 20;
+	private static final char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+	private static char[][] grid;
+	private static char[][] clone_grid;
+	private int score;
+	private int clone_score;
 	private ArrayQueue undo_grid;
 	private ArrayQueue undo_score;
 	int counter = 0;
@@ -82,6 +82,7 @@ public class Game {
 			}
 		}
 
+		// bring all tiles to the user's input direction after merging tiles
 		for (int i = 1; i < grid.length; i++) {
 			for (int j = 0; j < grid.length; j++) {
 				int k = i;
@@ -108,16 +109,16 @@ public class Game {
 
 		for (int j = 0; j < grid.length; j++) {
 			for (int i = grid.length - 1; i >= 0; i--) {
-				if (grid[i][j] != null_char) {
-					if ((i - 1) >= 0) {
+				if (grid[i][j] != null_char) { // check if cell will empty
+					if ((i - 1) >= 0) { // check if array will outbound
 						for (int k = i - 1; k >= 0; k--) {
-							if (grid[k][j] != null_char) {
-								if (grid[i][j] == grid[k][j]) {
+							if (grid[k][j] != null_char) { // check if cell will empty
+								if (grid[i][j] == grid[k][j]) { // merge if two tiles are the same 
 									grid[i][j] = mergeTile(grid[k][j]);
 									grid[k][j] = null_char;
-									break;
+									break; // break for finished one mapping
 								} else {
-									break;
+									break; //break for jump to next cell
 								}
 							}
 						}
@@ -126,6 +127,7 @@ public class Game {
 			}
 		}
 
+		// bring all tiles to the user's input direction after merging tiles
 		for (int i = grid.length - 2; i >= 0; i--) {
 			for (int j = 0; j < grid.length; j++) {
 				int k = i;
@@ -152,16 +154,16 @@ public class Game {
 
 		for (int i = 0; i < grid.length; i++) {		
 			for (int j = 0; j < grid.length; j++) {
-				if (grid[i][j] != null_char) {
-					if ((j + 1) < grid.length) {
+				if (grid[i][j] != null_char) { // check if cell will empty
+					if ((j + 1) < grid.length) { // check if array will outbound
 						for (int k = j + 1; k < grid.length; k++) {
-							if (grid[i][k] != null_char) {
-								if (grid[i][j] == grid[i][k]) {
+							if (grid[i][k] != null_char) { // check if cell will empty
+								if (grid[i][j] == grid[i][k]) { // merge if two tiles are the same 
 									grid[i][j] = mergeTile(grid[i][k]);
 									grid[i][k] = null_char;
-									break;
+									break; // break for finished one mapping
 								} else {
-									break;
+									break; //break for jump to next cell
 								}
 							}
 						}
@@ -170,6 +172,7 @@ public class Game {
 			}
 		}
 
+		// bring all tiles to the user's input direction after merging tiles
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 1; j < grid.length; j++) {
 				int k = j;
@@ -196,16 +199,16 @@ public class Game {
 
 		for (int i = 0; i < grid.length; i++) {	
 			for (int j = grid.length - 1; j >= 0; j--) {
-				if (grid[i][j] != null_char) {
-					if ((j - 1) >= 0) {
+				if (grid[i][j] != null_char) { // check if cell will empty
+					if ((j - 1) >= 0) { // check if array will outbound
 						for (int k = j - 1; k >= 0; k--) {
-							if (grid[i][k] != null_char) {
-								if (grid[i][j] == grid[i][k]) {
+							if (grid[i][k] != null_char) { // check if cell will empty
+								if (grid[i][j] == grid[i][k]) { // merge if two tiles are the same 
 									grid[i][j] = mergeTile(grid[i][k]);
 									grid[i][k] = null_char;
-									break;
+									break; // break for finished one mapping
 								} else {
-									break;
+									break; //break for jump to next cell
 								}
 							}
 						}
@@ -214,8 +217,8 @@ public class Game {
 			}
 		}
 
+		// bring all tiles to the user's input direction after merging tiles
 		for (int i = 0; i < grid.length; i++) {
-			System.out.print(i);
 			for (int j = grid.length - 2; j >= 0; j--) {
 				int k = j;
 				while (grid[i][k + 1] == null_char) {
@@ -265,6 +268,96 @@ public class Game {
 
 	// game over function for the grid
 	public boolean gameover() {
+		boolean gameover;
+
+		// validate available moves for slide up
+		for (int j = 0; j < grid.length; j++) {
+			for (int i = 0; i < grid.length; i++) {
+				if (grid[i][j] != null_char) { // check if cell will empty
+					if ((i + 1) < grid.length) { // check if array will outbound
+						for (int k = i + 1; k < grid.length; k++) {
+							if (grid[k][j] != null_char) { // check if cell will empty
+								if (grid[i][j] == grid[k][j]) { // check if two tiles are the same 
+									gameover = false;
+									if (!gameover)
+										return gameover;
+									break; // break for finished one mapping
+								} else {
+									break; //break for jump to next cell
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// validate avaliable moves for slide down
+		for (int j = 0; j < grid.length; j++) {
+			for (int i = grid.length - 1; i >= 0; i--) {
+				if (grid[i][j] != null_char) { // check if cell will empty
+					if ((i - 1) >= 0) { // check if array will outbound
+						for (int k = i - 1; k >= 0; k--) {
+							if (grid[k][j] != null_char) { // check if cell will empty
+								if (grid[i][j] == grid[k][j]) { // check if two tiles are the same 
+									gameover = false;
+									if (!gameover)
+										return gameover;
+									break; // break for finished one mapping
+								} else {
+									break; //break for jump to next cell
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// validate avaliable moves for slide left
+		for (int i = 0; i < grid.length; i++) {		
+			for (int j = 0; j < grid.length; j++) {
+				if (grid[i][j] != null_char) { // check if cell will empty
+					if ((j + 1) < grid.length) { // check if array will outbound
+						for (int k = j + 1; k < grid.length; k++) {
+							if (grid[i][k] != null_char) { // check if cell will empty
+								if (grid[i][j] == grid[i][k]) { // check if two tiles are the same 
+									gameover = false;
+									if (!gameover)
+										return gameover;
+									break; // break for finished one mapping
+								} else {
+									break; //break for jump to next cell
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// validate avaliable moves for slide right
+		for (int i = 0; i < grid.length; i++) {	
+			for (int j = grid.length - 1; j >= 0; j--) {
+				if (grid[i][j] != null_char) { // check if cell will empty
+					if ((j - 1) >= 0) { // check if array will outbound
+						for (int k = j - 1; k >= 0; k--) {
+							if (grid[i][k] != null_char) { // check if cell will empty
+								if (grid[i][j] == grid[i][k]) { // check if two tiles are the same 
+									gameover = false;
+									if (!gameover)
+										return gameover;
+									break; // break for finished one mapping
+								} else {
+									break; //break for jump to next cell
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
 		return true;
 	}
 
@@ -309,6 +402,23 @@ public class Game {
 		} else {
 			return true;
 		}
+	}
+
+	// check the grid is full of tiles
+	public boolean gridIsFull() {
+		boolean full = false;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[i].length; j++) {
+				if (grid[i][j] != null_char) {
+					full = true;
+				} else {
+					full = false;
+					if (!full)
+						return full;
+				}
+			}
+		}
+		return full;
 	}
 
 	// initial the grid with random tile
@@ -395,7 +505,12 @@ public class Game {
 				System.out.println("(0) Undo");
 				System.out.println("(R) Reset");
 				System.out.println("(Q) Quit");
+				if (gameover() && gridIsFull()) { // 'gamover' message print out here
+					System.out.println(gameover() + " " + gridIsFull());
+					System.out.println("Game Over! Please enter 'r' to reset it or 'q' to leave.");
+				}
 				System.out.print("Which Move: ");
+				
 				String cmd = br.readLine();
 				if (cmd.equals("2")) {
 					slideDown();
