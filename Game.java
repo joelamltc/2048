@@ -15,13 +15,15 @@ public class Game {
 	private static final int grid_width = 4;
 	private static final int undo_list_size = 20;
 	private static final char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+	private static char[] randomFillChar;
 	private static char[][] grid;
 	private static char[][] clone_grid;
 	private int score;
 	private int clone_score;
 	private ArrayQueue undo_grid;
 	private ArrayQueue undo_score;
-	int counter = 0;
+	private boolean gameover;
+	private int counter;
 
 	// constructor for the Game class
 	public Game(ArrayQueue undo_grid, ArrayQueue undo_score) {
@@ -29,6 +31,10 @@ public class Game {
 		this.undo_score = undo_score;
 		grid = new char[grid_width][grid_width];
 		score = 0;
+		gameover = true;
+		counter = 0;
+		generateRandomFillChar();
+		shuffle(randomFillChar);
 	}
 
 	// display the grid and player's score
@@ -55,7 +61,7 @@ public class Game {
 			System.out.println("-----------------");
 		}
 		System.out.println("Score: " + score);
-		System.out.println("Count: " + counter++);
+		System.out.println("Count: " + counter);
 	}
 
 	// slide up function for the grid
@@ -245,16 +251,14 @@ public class Game {
 		char tile;
 		Random rd1 = new Random();
 		Random rd2 = new Random();
-		Random rd3 = new Random();
 
-		int ratio = rd3.nextInt(50) + 1;
-		if (ratio <= 40) {
-			tile = '0';
-		} else if (ratio == 50) {
-			tile = 'B';
-		} else {
-			tile = 'A';
+		if (counter == 50) {
+			generateRandomFillChar();
+			shuffle(randomFillChar);
+			counter = 0;
 		}
+
+		tile = randomFillChar[counter];
 
 		while (filled) {
 			x = rd1.nextInt(4);
@@ -262,13 +266,14 @@ public class Game {
 			if (grid[x][y] == null_char) {
 				grid[x][y] = tile;
 				filled = false;
+				counter++;
 			}
 		}
 	}
 
 	// game over function for the grid
 	public boolean gameover() {
-		boolean gameover;
+		gameover = true;
 
 		// validate available moves for slide up
 		for (int j = 0; j < grid.length; j++) {
@@ -358,7 +363,7 @@ public class Game {
 			}
 		}
 
-		return true;
+		return gameover;
 	}
 
 	// undo function for grid
@@ -383,7 +388,11 @@ public class Game {
 		clone_grid = new char[grid_width][grid_width];
 		score = 0;
 		clone_score = 0;
+		counter = 0;
+		gameover = true;
 		emptyUndoLists();
+		generateRandomFillChar();
+		shuffle(randomFillChar);
 	}
 
 	// check the grid is empty or not
@@ -484,6 +493,37 @@ public class Game {
 		}
 	}
 
+	// generate random fill number for the randomFill function
+	public void generateRandomFillChar() {
+		randomFillChar = new char[50];
+
+		// fill the '0' for 40 times to the array
+		for (int i = 0; i < 40; i++) {
+			randomFillChar[i] = '0';
+		}
+
+		// fill the 'A' for 9 times to the array
+		for (int i = 40; i < 49; i++) {
+			randomFillChar[i] = 'A';
+		}
+
+		// fill the 'B' for  1 times to the array
+		randomFillChar[49] = 'B';
+	}
+
+	// shuffle the array 
+	public void shuffle(char[] c) {
+		int len = c.length;
+		for (int i = 0; i < c.length; i++) {
+			// get the random index from past i
+			int random = i + (int)(Math.random() * len - i);
+			// swap the element between present one and the random one
+			char tmp = randomFillChar[random];
+			randomFillChar[random] = randomFillChar[i];
+			randomFillChar[i] = tmp;
+		}
+	}
+
 	public void start() {
 		// read user"s input
 		InputStreamReader isr = new InputStreamReader(System.in);
@@ -498,6 +538,11 @@ public class Game {
 				System.out.println();
 				System.out.println("      2048");
 				display();
+				// generateRandomFillChar();
+				// System.out.println("Before shuffle: " + Arrays.toString(randomFillChar));
+				// System.out.println("Shuffle index: ");
+				// shuffle(randomFillChar);
+				// System.out.println("After shuffle: " + Arrays.toString(randomFillChar));
 				System.out.println("(2) Down");
 				System.out.println("(4) Left");
 				System.out.println("(6) Right");
