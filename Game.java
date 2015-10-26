@@ -430,6 +430,20 @@ public class Game {
 		return full;
 	}
 
+	// check the grid contains the 'Z'
+	public boolean gridContainsZ() {
+		boolean contain = false;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[i].length; j++) {
+				if (grid[i][j] == 'Z') {
+					contain = true;
+					return contain;
+				}
+			}
+		}
+		return contain;
+	}
+
 	// initial the grid with random tile
 	public void init() {
 		randomFill();
@@ -525,11 +539,11 @@ public class Game {
 	}
 
 	public void start() {
-		// read user"s input
+		// read user's input
 		InputStreamReader isr = new InputStreamReader(System.in);
 		BufferedReader br = new BufferedReader(isr);
 
-		// control the user"s input life cycle
+		// control the system input life cycle
 		boolean cont = true;
 
 		// print the menu and grid
@@ -538,11 +552,6 @@ public class Game {
 				System.out.println();
 				System.out.println("      2048");
 				display();
-				// generateRandomFillChar();
-				// System.out.println("Before shuffle: " + Arrays.toString(randomFillChar));
-				// System.out.println("Shuffle index: ");
-				// shuffle(randomFillChar);
-				// System.out.println("After shuffle: " + Arrays.toString(randomFillChar));
 				System.out.println("(2) Down");
 				System.out.println("(4) Left");
 				System.out.println("(6) Right");
@@ -550,12 +559,10 @@ public class Game {
 				System.out.println("(0) Undo");
 				System.out.println("(R) Reset");
 				System.out.println("(Q) Quit");
-				if (gameover() && gridIsFull()) { // 'gamover' message print out here
-					System.out.println(gameover() + " " + gridIsFull());
-					System.out.println("Game Over! Please enter 'r' to reset it or 'q' to leave.");
+				if ((gameover() && gridIsFull()) || gridContainsZ()) { // 'gamover' message print out here
+					System.out.println("Game Over! Please enter 'r' to reset or 'q' to leave.");
 				}
-				System.out.print("Which Move: ");
-				
+				System.out.print("Which Move: ");				
 				String cmd = br.readLine();
 				if (cmd.equals("2")) {
 					slideDown();
@@ -570,7 +577,7 @@ public class Game {
 					System.out.println("Leave Game. Good Bye!!!");
 					System.out.println();
 
-					//end the user"s input life cycle
+					//end the system input life cycle
 					cont = false;
 				} else if (cmd.equals("0")) {
 					undo();
