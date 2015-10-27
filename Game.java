@@ -76,7 +76,7 @@ public class Game {
 
 	// slide up function for the grid
 	public void slideUp() {
-		cloneArray();
+		cloneState();
 
 		for (int j = 0; j < grid.length; j++) {
 			for (int i = 0; i < grid.length; i++) {
@@ -121,7 +121,7 @@ public class Game {
 
 	// slide down function for the grid
 	public void slideDown() {
-		cloneArray();
+		cloneState();
 
 		for (int j = 0; j < grid.length; j++) {
 			for (int i = grid.length - 1; i >= 0; i--) {
@@ -166,7 +166,7 @@ public class Game {
 
 	// slide left function for the grid
 	public void slideLeft() {
-		cloneArray();
+		cloneState();
 
 		for (int i = 0; i < grid.length; i++) {		
 			for (int j = 0; j < grid.length; j++) {
@@ -211,7 +211,7 @@ public class Game {
 
 	// slide right function for the grid
 	public void slideRight() {
-		cloneArray();
+		cloneState();
 
 		for (int i = 0; i < grid.length; i++) {	
 			for (int j = grid.length - 1; j >= 0; j--) {
@@ -486,7 +486,7 @@ public class Game {
 	}
 
 	// clone grid array, score, randomFillChar array and randomFillChar array counter 
-	public void cloneArray() {
+	public void cloneState() {
 		clone_grid = new char[grid_width][grid_width]; // everytime initial with new char 2d array to avoid duplicate memory address
 		// clone grid array
 		for (int i = 0; i < grid.length; i++) {
