@@ -463,13 +463,14 @@ public class Game {
 	public int convertLetter(char c) {
 		int x = 0;
 		for (int i = 0; i < alphabet.length; i++) {
-			if (c != 'Z') {
+			if (c == 'Z') {
+				victory = true;
+				return alphabet.length - 1;
+			} else {
 				if (c == alphabet[i]) {
 					x =  i + 1;
 					break;
 				}
-			} else {
-				return alphabet.length - 1;
 			}
 		}
 		return x;
