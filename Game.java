@@ -1,6 +1,6 @@
 /*
  * Title: DSA Assignment 15-16
- * Description: 2048 game
+ * Description: Game class of 2048 game
  * Student name: Lin Ziqiao 
  * Student ID: 6826257
  * Date: 27 Nov 2015 
@@ -44,7 +44,7 @@ public class Game {
 		clone_counter = 0;
 		gameover = true;
 		victory = false;
-		generateRandomFillChar();
+		generateCharForRandomFill();
 		shuffle(randomFillChar);
 	}
 
@@ -263,7 +263,7 @@ public class Game {
 		Random rd2 = new Random();
 
 		if (counter == 50) {
-			generateRandomFillChar();
+			generateCharForRandomFill();
 			shuffle(randomFillChar);
 			counter = 0;
 		}
@@ -416,7 +416,7 @@ public class Game {
 		clone_counter = 0;
 		gameover = true;
 		victory = false;
-		generateRandomFillChar();
+		generateCharForRandomFill();
 		shuffle(randomFillChar);
 	}
 
@@ -461,7 +461,7 @@ public class Game {
 		randomFill();
 	}
 
-	// using number to represent the letters,
+	// using number to represent the letters, return the next position of current char
 	// used to calculate the score
 	public int convertLetter(char c) {
 		int x = 0;
@@ -532,7 +532,7 @@ public class Game {
 	}
 
 	// generate random fill number for the randomFill function
-	public void generateRandomFillChar() {
+	public void generateCharForRandomFill() {
 		randomFillChar = new char[randomFillChar_array_size];
 
 		// fill the '0' for 40 times to the array
