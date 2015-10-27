@@ -26,17 +26,17 @@ public class Game {
 	private int clone_counter;
 	private ArrayQueue undo_grid;
 	private ArrayQueue undo_score;
-	private ArrayQueue undo_rancdomFillChar;
+	private ArrayQueue undo_randomFillChar;
 	private ArrayQueue undo_randomPosition;
 	private boolean gameover;
 	private boolean victory;
 
 	// constructor for the Game class
-	public Game(ArrayQueue undo_grid, ArrayQueue undo_score, ArrayQueue undo_rancdomFillChar, ArrayQueue undo_randomPosition) {
-		this.undo_grid = undo_grid;
-		this.undo_score = undo_score;
-		this.undo_rancdomFillChar = undo_rancdomFillChar;
-		this.undo_randomPosition = undo_randomPosition;
+	public Game() {
+		undo_grid = new ArrayQueue();
+		undo_score = new ArrayQueue();
+		undo_randomFillChar = new ArrayQueue();
+		undo_randomPosition = new ArrayQueue();
 		grid = new char[grid_width][grid_width];
 		score = 0;
 		clone_score = 0;
@@ -378,7 +378,7 @@ public class Game {
 
 	// undo function for grid
 	public void undo() {
-		if (undo_grid.length() > 0 && undo_score.length() > 0 && undo_rancdomFillChar.length() > 0 && undo_randomPosition.length() > 0) {
+		if (undo_grid.length() > 0 && undo_score.length() > 0 && undo_randomFillChar.length() > 0 && undo_randomPosition.length() > 0) {
 			char[][] undo = new char[grid_width][grid_width]; // initial a new char 2d array
 			undo = (char[][])undo_grid.pop(); // assign the previous state to the new char 2d array
 			// use nested loop to write into the grid array
@@ -390,7 +390,7 @@ public class Game {
 			score = (int)undo_score.pop(); // replace the score to the previous one
 
 			char[] undo1 = new char[randomFillChar_array_size]; // initial a new char array
-			undo1 = (char[])undo_rancdomFillChar.pop(); // assign the orevious state to the new char array
+			undo1 = (char[])undo_randomFillChar.pop(); // assign the orevious state to the new char array
 			// use loop to write into the randomFillChar array
 			for (int i = 0; i < undo1.length; i++) {
 				randomFillChar[i] = undo1[i];
@@ -404,6 +404,10 @@ public class Game {
 
 	// reset the game and the variables it needs
 	public void reset() {
+		undo_grid = new ArrayQueue();
+		undo_score = new ArrayQueue();
+		undo_randomFillChar = new ArrayQueue();
+		undo_randomPosition = new ArrayQueue();
 		grid = new char[grid_width][grid_width];
 		clone_grid = new char[grid_width][grid_width];
 		score = 0;
@@ -412,7 +416,6 @@ public class Game {
 		clone_counter = 0;
 		gameover = true;
 		victory = false;
-		emptyUndoLists();
 		generateRandomFillChar();
 		shuffle(randomFillChar);
 	}
@@ -508,33 +511,23 @@ public class Game {
 
 	// add the grid and score to the undo list
 	public void addToUndoList() {
-		if (undo_grid.length() == undo_list_size && undo_score.length() == undo_list_size && undo_rancdomFillChar.length() == undo_list_size && undo_randomPosition.length() == undo_list_size) {
+		if (undo_grid.length() == undo_list_size && undo_score.length() == undo_list_size && undo_randomFillChar.length() == undo_list_size && undo_randomPosition.length() == undo_list_size) {
 			undo_grid.dequeue(); // remove the last grid
 			undo_grid.enqueue(clone_grid); // add grid in to undo list
 
 			undo_score.dequeue(); // remove the last score and add the new score
 			undo_score.enqueue(clone_score); // add score in to undo list
 
-			undo_rancdomFillChar.dequeue(); // remove the last array
-			undo_rancdomFillChar.enqueue(clone_randomFillChar); // add the array to undo list
+			undo_randomFillChar.dequeue(); // remove the last array
+			undo_randomFillChar.enqueue(clone_randomFillChar); // add the array to undo list
 
 			undo_randomPosition.dequeue(); // remove the last random position
 			undo_randomPosition.enqueue(clone_counter); // add the random position to undo list
 		} else {
 			undo_grid.enqueue(clone_grid);
 			undo_score.enqueue(clone_score);
-			undo_rancdomFillChar.enqueue(clone_randomFillChar);
+			undo_randomFillChar.enqueue(clone_randomFillChar);
 			undo_randomPosition.enqueue(clone_counter);
-		}
-	}
-
-	// empty all the undo lists if user reset the game
-	public void emptyUndoLists() {
-		while (undo_grid.length() > 0 && undo_score.length() > 0 && undo_rancdomFillChar.length() > 0 && undo_randomPosition.length() > 0) {
-			undo_grid.pop();
-			undo_score.pop();
-			undo_rancdomFillChar.pop();
-			undo_randomPosition.pop();
 		}
 	}
 
