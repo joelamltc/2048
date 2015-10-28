@@ -1,4 +1,4 @@
-/*
+/**
  * Title: DSA Assignment 15-16
  * Description: Game class of 2048 game
  * Student name: Lin Ziqiao 
@@ -45,7 +45,6 @@ public class Game {
 		gameover = true;
 		victory = false;
 		generateCharForRandomFill();
-		shuffle(randomFillChar);
 	}
 
 	// display the grid and player's score
@@ -264,7 +263,6 @@ public class Game {
 
 		if (counter == 50) {
 			generateCharForRandomFill();
-			shuffle(randomFillChar);
 			counter = 0;
 		}
 
@@ -417,7 +415,6 @@ public class Game {
 		gameover = true;
 		victory = false;
 		generateCharForRandomFill();
-		shuffle(randomFillChar);
 	}
 
 	// check the grid is empty or not
@@ -485,7 +482,7 @@ public class Game {
 		return alphabet[convertLetter(c)];
 	}
 
-	// clone grid array, score, randomFillChar array and randomFillChar array counter 
+	// clone grid array, score, randomFillChar array and randomFillChar array counter
 	public void cloneState() {
 		clone_grid = new char[grid_width][grid_width]; // everytime initial with new char 2d array to avoid duplicate memory address
 		// clone grid array
@@ -547,9 +544,12 @@ public class Game {
 
 		// fill the 'B' for  1 times to the array
 		randomFillChar[49] = 'B';
+
+		// shuffle the array
+		shuffle(randomFillChar);
 	}
 
-	// shuffle the array 
+	// shuffle the array
 	public void shuffle(char[] c) {
 		int len = c.length;
 		for (int i = 0; i < c.length; i++) {
