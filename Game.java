@@ -1,9 +1,9 @@
 /**
  * Title: DSA Assignment 15-16
- * Description: Game class of 2048 game
+ * Description: ArrayQueue class of 2048 game
  * Student name: Lin Ziqiao 
  * Student ID: 6826257
- * Date: 27 Nov 2015 
+ * Date: 17 Nov 2015 
  */
 
 import java.util.*;
@@ -31,7 +31,9 @@ public class Game {
 	private boolean gameover;
 	private boolean victory;
 
-	// constructor for the Game class
+	/**
+	 * constructor for the Game class
+	 */
 	public Game() {
 		undo_grid = new ArrayQueue();
 		undo_score = new ArrayQueue();
@@ -47,7 +49,9 @@ public class Game {
 		generateCharForRandomFill();
 	}
 
-	// display the grid and player's score
+	/**
+	 * display the grid and player's score
+	 */
 	public void display() {
 		if (gridIsEmpty()) {
 			init();
@@ -57,9 +61,11 @@ public class Game {
 		for (int i = 0; i < grid.length; i++) {
 			System.out.print("| ");
 			for (int j = 0; j < grid[i].length; j++) {
-				if (System.getProperty("os.name").contains("Windows")) { //for display on Window's cmd
+				if (System.getProperty("os.name").contains("Windows")) { 
+					//for display on Window's cmd
 					System.out.printf("%s | ", Character.toString(grid[i][j]));
-				} else if (System.getProperty("os.name").contains("Mac")) { // for display on Mac OS's terminal
+				} else if (System.getProperty("os.name").contains("Mac")) { 
+					// for display on Mac OS's terminal
 					if (grid[i][j] == null_char) {
 						System.out.printf(" %s | ", Character.toString(grid[i][j]));
 					} else {
@@ -73,16 +79,20 @@ public class Game {
 		System.out.println("Score: " + score);
 	}
 
-	// slide up function for the grid
+	/**
+	 * slide up function for the grid
+	 */
 	public void slideUp() {
+		// clone the current state of grid, score, randomFillChar and randomFillChar position
 		cloneState();
-
+ 
+		// slide up
 		for (int j = 0; j < grid.length; j++) {
 			for (int i = 0; i < grid.length; i++) {
-				if (grid[i][j] != null_char) { // check if cell will empty
-					if ((i + 1) < grid.length) { // check if array is last cell
+				if (grid[i][j] != null_char) { // check if cell is empty or not
+					if ((i + 1) < grid.length) { // check if array is last cell or not
 						for (int k = i + 1; k < grid.length; k++) {
-							if (grid[k][j] != null_char) { // check if cell will empty
+							if (grid[k][j] != null_char) { // check if cell is empty or not
 								if (grid[i][j] == grid[k][j]) { // merge if two tiles are the same 
 									grid[i][j] = mergeTile(grid[k][j]);
 									grid[k][j] = null_char;
@@ -112,22 +122,27 @@ public class Game {
 			}
 		}
 
+		// validating move, random fill a cell and store the state to the undo list
 		if (moveValidate()) {
 			randomFill();
 			addToUndoList();
 		}
 	}
 
-	// slide down function for the grid
+	/**
+	 * slide down function for the grid
+	 */
 	public void slideDown() {
+		// clone the current state of grid, score, randomFillChar and randomFillChar position
 		cloneState();
 
+		// slide down
 		for (int j = 0; j < grid.length; j++) {
 			for (int i = grid.length - 1; i >= 0; i--) {
-				if (grid[i][j] != null_char) { // check if cell will empty
-					if ((i - 1) >= 0) { // check if array is last cell
+				if (grid[i][j] != null_char) { // check if cell is empty or not
+					if ((i - 1) >= 0) { // check if array is last cell or not
 						for (int k = i - 1; k >= 0; k--) {
-							if (grid[k][j] != null_char) { // check if cell will empty
+							if (grid[k][j] != null_char) { // check if cell is empty or not
 								if (grid[i][j] == grid[k][j]) { // merge if two tiles are the same 
 									grid[i][j] = mergeTile(grid[k][j]);
 									grid[k][j] = null_char;
@@ -156,23 +171,28 @@ public class Game {
 				}
 			}
 		}
-
+		
+		// validating move, random fill a cell and store the state to the undo list
 		if (moveValidate()) {
 			randomFill();
 			addToUndoList();
 		}
 	}
 
-	// slide left function for the grid
+	/**
+	 * slide left function for the grid
+	 */
 	public void slideLeft() {
+		// clone the current state of grid, score, randomFillChar and randomFillChar position
 		cloneState();
 
+		// slide left
 		for (int i = 0; i < grid.length; i++) {		
 			for (int j = 0; j < grid.length; j++) {
-				if (grid[i][j] != null_char) { // check if cell will empty
-					if ((j + 1) < grid.length) { // check if array is last cell
+				if (grid[i][j] != null_char) { // check if cell is empty or not
+					if ((j + 1) < grid.length) { // check if array is last cell or not
 						for (int k = j + 1; k < grid.length; k++) {
-							if (grid[i][k] != null_char) { // check if cell will empty
+							if (grid[i][k] != null_char) { // check if cell is empty or not
 								if (grid[i][j] == grid[i][k]) { // merge if two tiles are the same 
 									grid[i][j] = mergeTile(grid[i][k]);
 									grid[i][k] = null_char;
@@ -201,23 +221,28 @@ public class Game {
 				}
 			}
 		}
-
+		
+		// validating move, random fill a cell and store the state to the undo list
 		if (moveValidate()) {
 			randomFill();
 			addToUndoList();
 		}
 	}
 
-	// slide right function for the grid
+	/**
+	 * slide right function for the grid
+	 */
 	public void slideRight() {
+		// clone the current state of grid, score, randomFillChar and randomFillChar position
 		cloneState();
 
+		// slide right
 		for (int i = 0; i < grid.length; i++) {	
 			for (int j = grid.length - 1; j >= 0; j--) {
-				if (grid[i][j] != null_char) { // check if cell will empty
-					if ((j - 1) >= 0) { // check if array is last cell
+				if (grid[i][j] != null_char) { // check if cell is empty or not
+					if ((j - 1) >= 0) { // check if array is last cell or not
 						for (int k = j - 1; k >= 0; k--) {
-							if (grid[i][k] != null_char) { // check if cell will empty
+							if (grid[i][k] != null_char) { // check if cell is empty or not
 								if (grid[i][j] == grid[i][k]) { // merge if two tiles are the same 
 									grid[i][j] = mergeTile(grid[i][k]);
 									grid[i][k] = null_char;
@@ -245,15 +270,18 @@ public class Game {
 					}
 				}
 			}
-		}
+		}		
 
+		// validating move, random fill a cell and store the state to the undo list
 		if (moveValidate()) {
 			randomFill();
 			addToUndoList();
 		}
 	}
 
-	// random fill tile function for the grid
+	/**
+	 * random fill tile function for the grid
+	 */
 	public void randomFill() {
 		boolean filled = true;
 		int x, y;
@@ -261,6 +289,7 @@ public class Game {
 		Random rd1 = new Random();
 		Random rd2 = new Random();
 
+		// re-generate a new random fill array and set the counter(index) to 0 if used all elements in the array
 		if (counter == 50) {
 			generateCharForRandomFill();
 			counter = 0;
@@ -279,7 +308,11 @@ public class Game {
 		}
 	}
 
-	// game over function for the grid
+	/**
+	 * game over function for the grid
+	 * 
+	 * @return boolean gameover
+	 */
 	public boolean gameover() {
 		gameover = true;
 
@@ -374,7 +407,9 @@ public class Game {
 		return gameover;
 	}
 
-	// undo function for grid
+	/**
+	 * undo function for the grid
+	 */
 	public void undo() {
 		if (undo_grid.length() > 0 && undo_score.length() > 0 && undo_randomFillChar.length() > 0 && undo_randomPosition.length() > 0) {
 			char[][] undo = new char[grid_width][grid_width]; // initial a new char 2d array
@@ -400,7 +435,9 @@ public class Game {
 		}
 	}
 
-	// reset the game and the variables it needs
+	/**
+	 * reset the game and the variables it needs
+	 */
 	public void reset() {
 		undo_grid = new ArrayQueue();
 		undo_score = new ArrayQueue();
@@ -417,7 +454,11 @@ public class Game {
 		generateCharForRandomFill();
 	}
 
-	// check the grid is empty or not
+	/**
+	 * check the grid is empty or not
+	 * 
+	 * @return boolean
+	 */
 	public boolean gridIsEmpty() {
 		boolean empty = false;
 		for (int i = 0; i < grid.length; i++) {
@@ -435,7 +476,11 @@ public class Game {
 		}
 	}
 
-	// check the grid is full of tiles
+	/**
+	 * check the grid is full of tiles
+	 * 
+	 * @return boolean full
+	 */
 	public boolean gridIsFull() {
 		boolean full = false;
 		for (int i = 0; i < grid.length; i++) {
@@ -452,14 +497,37 @@ public class Game {
 		return full;
 	}
 
-	// initial the grid with random tile
+	/**
+	 * initial the grid with two random tiles
+	 */
 	public void init() {
 		randomFill();
 		randomFill();
+		// grid[0][0] = 'A';
+		// grid[0][1] = 'B';
+		// grid[0][2] = 'C';
+		// grid[0][3] = 'D';
+		// grid[1][0] = 'E';
+		// grid[1][1] = 'F';
+		// grid[1][2] = 'G';
+		// grid[1][3] = 'H';
+		// grid[2][0] = 'I';
+		// grid[2][1] = 'J';
+		// grid[2][2] = 'K';
+		// grid[2][3] = 'L';
+		// grid[3][0] = 'M';
+		// grid[3][1] = 'N';
+		// grid[3][2] = 'Z';
+		// grid[3][3] = 'Z';
 	}
 
-	// using number to represent the letters, return the next position of current char
-	// used to calculate the score
+	/**
+	 * using number to represent the letters, return the next position of current char
+	 * used to calculate the score and game over if two 'Z' merged
+	 * 
+	 * @param char c 
+	 * @return int x
+	 */
 	public int convertLetter(char c) {
 		int x = 0;
 		for (int i = 0; i < alphabet.length; i++) {
@@ -476,13 +544,20 @@ public class Game {
 		return x;
 	}
 
-	// return next letter of current one for merging tile
+	/**
+	 * return next letter of current one for merging tile
+	 * 
+	 * @param char c 
+	 * @return char 
+	 */
 	public char mergeTile(char c) {
 		score += Math.pow(2, convertLetter(c)); // calculate score
 		return alphabet[convertLetter(c)];
 	}
 
-	// clone grid array, score, randomFillChar array and randomFillChar array counter
+	/**
+	 * clone grid array, score, randomFillChar array and randomFillChar array counter
+	 */
 	public void cloneState() {
 		clone_grid = new char[grid_width][grid_width]; // everytime initial with new char 2d array to avoid duplicate memory address
 		// clone grid array
@@ -501,12 +576,18 @@ public class Game {
 		clone_counter = counter; // clone the array counter
 	}
 
-	// moves validation
+	/**
+	 * moves validation
+	 * 
+	 * @return boolean
+	 */
 	public boolean moveValidate() {
 		return !(Arrays.deepEquals(grid, clone_grid));
 	}
 
-	// add the grid and score to the undo list
+	/**
+	 * add the grid and score to the undo list
+	 */
 	public void addToUndoList() {
 		if (undo_grid.length() == undo_list_size && undo_score.length() == undo_list_size && undo_randomFillChar.length() == undo_list_size && undo_randomPosition.length() == undo_list_size) {
 			undo_grid.dequeue(); // remove the last grid
@@ -528,7 +609,9 @@ public class Game {
 		}
 	}
 
-	// generate random fill number for the randomFill function
+	/**
+	 * generate random fill number for the randomFill function
+	 */
 	public void generateCharForRandomFill() {
 		randomFillChar = new char[randomFillChar_array_size];
 
@@ -549,7 +632,11 @@ public class Game {
 		shuffle(randomFillChar);
 	}
 
-	// shuffle the array
+	/**
+	 * shuffle the array
+	 * 
+	 * @param char[] c
+	 */
 	public void shuffle(char[] c) {
 		int len = c.length;
 		for (int i = 0; i < c.length; i++) {
@@ -562,6 +649,9 @@ public class Game {
 		}
 	}
 
+	/**
+	 * start game function and menu with logic
+	 */
 	public void start() {
 		// read user's input
 		InputStreamReader isr = new InputStreamReader(System.in);
@@ -585,7 +675,7 @@ public class Game {
 				}
 				System.out.println("(R) Reset");
 				System.out.println("(Q) Quit");
-				if ((gameover() && gridIsFull())) { // 'gamover' message print out here
+				if ((gameover() && gridIsFull() && !victory)) { // 'gamover' message print out here
 					System.out.println("Game Over! Please enter 'r' to reset or 'q' to leave.");
 				}
 				if (victory) { // 'victory' message print out here

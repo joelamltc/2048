@@ -1,9 +1,9 @@
-/*
+/**
  * Title: DSA Assignment 15-16
- * Description: Start class of 2048 game
+ * Description: ArrayQueue class of 2048 game
  * Student name: Lin Ziqiao 
  * Student ID: 6826257
- * Date: 27 Nov 2015 
+ * Date: 17 Nov 2015 
  */
 
 public class Start {
