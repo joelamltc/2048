@@ -1,9 +1,9 @@
-/*
+/**
  * Title: DSA Assignment 15-16
  * Description: ArrayQueue class of 2048 game
  * Student name: Lin Ziqiao 
  * Student ID: 6826257
- * Date: 27 Nov 2015 
+ * Date: 17 Nov 2015 
  */
 
 public class ArrayQueue {
@@ -14,6 +14,11 @@ public class ArrayQueue {
 	private int rear;
 	private int count;
 
+	/**
+	 * constructor method for ArrayQueeue
+	 * 
+	 * @param int size
+	 */
     public ArrayQueue(int size) {
 		maxSize = size;
     	undo_list = new Object[maxSize];
@@ -22,22 +27,47 @@ public class ArrayQueue {
     	rear = -1;
     }
 
+    /**
+     * constructor method for ArrayQueeue
+     * initial the size
+     */
 	public ArrayQueue() {
 		this(20);
 	}
 
+	/**
+	 * check the array is empty or not
+	 * 
+	 * @return boolean
+	 */
 	public boolean empty() {
 		return count <= 0;
 	}
 
+	/**
+	 * check the array is full or not
+	 * 
+	 * @return boolean
+	 */
 	public boolean full() {
 		return count == maxSize;
 	}
 
+	/**
+	 * get the array length
+	 * 
+	 * @return int count
+	 */
 	public int length() {
 		return count;
 	}
 
+	/**
+	 * add object to the rear of the queue
+	 * 
+	 * @param object item
+	 * @throws QueueFullException
+	 */
 	public void enqueue(Object item) throws QueueFullException {
 		if (count < maxSize) {
 			count++;
@@ -50,6 +80,12 @@ public class ArrayQueue {
 			throw new QueueFullException();
 	}
 
+	/**
+	 * remove object from front of the queue
+	 * 
+	 * @return object temp
+	 * @throws EmptyQueueException
+	 */
 	public Object dequeue() throws EmptyQueueException {
 		if (count <= 0)
 			throw new EmptyQueueException();
@@ -62,6 +98,11 @@ public class ArrayQueue {
 		return temp;
 	}
 
+	/**
+	 * remove and return the last object from the queue
+	 * @return object temp
+	 * @throws EmptyQueueException
+	 */
 	public Object pop() throws EmptyQueueException {
 		if (count <= 0)
 			throw new EmptyQueueException();
@@ -77,6 +118,11 @@ public class ArrayQueue {
 		return temp;
 	}
 
+	/**
+	 * override toString method
+	 * 
+	 * @return String s
+	 */
 	public String toString() {
 		String s = "front [ ";
 
@@ -92,16 +138,22 @@ public class ArrayQueue {
 		s = s + "] rear";
 		return s;
 	}
-} // class ArrayQueue
+}
 
 class EmptyQueueException extends RuntimeException {
+	/**
+	 * customized EmptyQueueException
+	 */
 	public EmptyQueueException () {
 		super("Queue is empty");
 	}
-} // class EmptyQueueException
+}
 
 class QueueFullException extends RuntimeException {
+	/**
+	 * customized QueueFullException
+	 */
 	public QueueFullException () {
 		super("Queue is full");
 	}
-} // class QueueFullException
+}
