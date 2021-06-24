@@ -667,11 +667,11 @@ public class Game {
 				System.out.println("      2048");
 				display();
 				if (!victory) { // menu for not yet victory
-					System.out.println("(2) Down");
-					System.out.println("(4) Left");
-					System.out.println("(6) Right");
-					System.out.println("(8) Up");
-					System.out.println("(0) Undo");
+					System.out.println("(W) Up");
+					System.out.println("(A) Left");
+					System.out.println("(S) Down");
+					System.out.println("(D) Right");
+					System.out.println("(U) Undo");
 				}
 				System.out.println("(R) Reset");
 				System.out.println("(Q) Quit");
@@ -685,13 +685,13 @@ public class Game {
 				String cmd = br.readLine();
 				if (!victory) {
 					// menu logic for not yet victory
-					if (cmd.equals("2")) {
+					if (cmd.equalsIgnoreCase("s")) {
 						slideDown();
-					} else if (cmd.equals("4")) {
+					} else if (cmd.equalsIgnoreCase("a")) {
 						slideLeft();
-					} else if (cmd.equals("6")) {
+					} else if (cmd.equalsIgnoreCase("d")) {
 						slideRight();
-					} else if (cmd.equals("8")) {
+					} else if (cmd.equalsIgnoreCase("w")) {
 						slideUp();
 					} else if (cmd.equalsIgnoreCase("q")) {	
 						System.out.println();
@@ -700,7 +700,7 @@ public class Game {
 
 						//end the system input life cycle
 						cont = false;
-					} else if (cmd.equals("0")) {
+					} else if (cmd.equalsIgnoreCase("u")) {
 						undo();
 					} else if (cmd.equalsIgnoreCase("r")) {
 						reset();
